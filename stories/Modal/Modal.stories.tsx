@@ -44,3 +44,10 @@ export const WithNoContent: Story = {
   },
 };
 
+export const isNotOpen: Story = {
+  args: {
+    isOpen: false,
+    onClose: () => {},
+    title: 'Modal Title',
+  },
+};
