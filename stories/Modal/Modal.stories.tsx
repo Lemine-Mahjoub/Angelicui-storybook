@@ -1,6 +1,9 @@
 import type { Meta, StoryObj } from '@storybook/react';
 import React from 'react';
-import { Modal } from './Modal';
+import { Modal, useModal } from './Modal';
+import { ModalExit } from './ModalExit';
+import { ModalContent } from './ModalContent';
+import { ModalAction } from './ModalAction';
 
 const meta = {
   component: Modal,
@@ -10,44 +13,27 @@ export default meta;
 
 type Story = StoryObj<typeof meta>;
 
+
+
+
+const DefaultChildren = () => {
+    const { isOpen, setIsOpen } = useModal();
+    return (
+        <>
+            <ModalExit.Icon onClose={() => {setIsOpen(false)}}/>
+            <ModalContent>
+                <h1>Modal Title</h1>
+            </ModalContent>
+            <ModalAction.Delete onCancel={() => {setIsOpen(false)}} onDelete={() => {}}/>
+        </>
+    )
+}
+
+
 export const Default: Story = {
   args: {
     isOpen: true,
-    onClose: () => {},
-    children: <div>Modal Content</div>,
-    title: 'Modal Title',
+    children: <DefaultChildren />,
   },
 };
 
-export const OnlyTitle: Story = {
-  args: {
-    isOpen: true,
-    onClose: () => {},
-    title: 'Modal Title',
-  },
-};
-
-export const WithContent: Story = {
-  args: {
-    isOpen: true,
-    onClose: () => {},
-    children: <div>Modal Content</div>,
-    title: 'Modal Title',
-  },
-};
-
-export const WithNoContent: Story = {
-  args: {
-    isOpen: true,
-    onClose: () => {},
-    title: 'Modal Title',
-  },
-};
-
-export const isNotOpen: Story = {
-  args: {
-    isOpen: false,
-    onClose: () => {},
-    title: 'Modal Title',
-  },
-};
