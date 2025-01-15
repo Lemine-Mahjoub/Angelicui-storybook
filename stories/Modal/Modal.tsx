@@ -1,4 +1,5 @@
 import React, { createContext, useContext, useState } from 'react';
+import { createPortal } from 'react-dom';
 
 interface ModalContextType {
   isOpen: boolean;
@@ -26,11 +27,14 @@ export function Modal({ isOpen, children }: ModalProps) {
             setIsOpen: setIsOpenModal,
         }}
     >
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center">
-            <div className="bg-white p-6 rounded-md">
-                {children}
+        {createPortal(
+            <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center">
+                <div className="bg-white p-6 rounded-md">
+                    {children}
             </div>
-        </div>
+        </div>,
+        document.body
+    )}
     </ModalContext.Provider>
   );
 }
