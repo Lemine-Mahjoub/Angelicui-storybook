@@ -1,55 +1,83 @@
-import React from 'react';
-import hljs from 'highlight.js';
-import 'highlight.js/styles/github.css';
-import { HIGHLIGHTJS_LANGUAGE, DEFAULT_LANGUAGE } from '../constant';
-
+import React, { createContext, useContext, useState } from 'react';
+import { CodeBlockContent } from './CodeBlockContent';
 interface CodeBlockProps {
-  code: string[];
-  language?: string;
-  hasLineNumbers?: boolean;
+    allowFullScreen?: boolean;
+    allowMinimize?: boolean;
+    allowClose?: boolean;
+    content: string[];
+    language: string;
+    hasLineNumbers?: boolean;
 }
 
+interface CodeBlockContextType {
+    isFullscreen: boolean;
+    setIsFullscreen: (value: boolean) => void;
+    isMinimized: boolean;
+    setIsMinimized: (value: boolean) => void;
+    isClosed: boolean;
+    setIsClosed: (value: boolean) => void;
+    content: string[];
+    language: string;
+    hasLineNumbers: boolean;
+    allowFullScreen: boolean;
+    allowMinimize: boolean;
+    allowClose: boolean;
+}
+
+const CodeBlockContext = createContext<CodeBlockContextType | undefined>(undefined);
+
+export function useCodeBlock() {
+    const context = useContext(CodeBlockContext);
+    if (!context) {
+        throw new Error('useCodeBlock must be used within a CodeBlockProvider');
+    }
+    return context;
+}
+
+export function CodeBlock({
+    allowFullScreen = false,
+    allowMinimize = false,
+    allowClose = false,
+    content,
+    language,
+    hasLineNumbers = false
+}: CodeBlockProps) {
+
+    const [isFullscreen, setIsFullscreen] = useState(false);
+    const [isMinimized, setIsMinimized] = useState(false);
+    const [isClosed, setIsClosed] = useState(false);
+
+    const contextValue: CodeBlockContextType = {
+        isFullscreen,
+        setIsFullscreen,
+        isMinimized,
+        setIsMinimized,
+        isClosed,
+        setIsClosed,
+        content,
+        language,
+        hasLineNumbers,
+        allowFullScreen,
+        allowMinimize,
+        allowClose,
+    };
+
+    if (isClosed) {
+        return null;
+    }
+
+    if (isFullscreen) {
+        return (
+            <CodeBlockContext.Provider value={contextValue}>
+                <CodeBlockContent.Fullscreen />
+            </CodeBlockContext.Provider>
+        )
+    }
 
 
-export const CodeBlock: React.FC<CodeBlockProps> = ({ code, language = 'plaintext', hasLineNumbers = false }) => {
-
-  if (!code) {
-    return null;
-  }
-
-  if (typeof code === 'string') {
-    code = [code];
-  }
-
-  if (!HIGHLIGHTJS_LANGUAGE.includes(language)) {
-    console.warn(`Language ${language} is not supported`);
-    language = DEFAULT_LANGUAGE;
-  }
-
-
-  const highlightedCode = highlightCode(code, language, hasLineNumbers);
-
-  return (
-    <pre className="code-block">
-      <code
-        className={`language-${language}`}
-        dangerouslySetInnerHTML={{ __html: highlightedCode }}
-      />
-    </pre>
-  );
-};
-
-export default CodeBlock;
-
-
-
-function highlightCode(code: string[], language: string, hasLineNumbers: boolean) {
-  const highlightedCode = hljs.highlight(code.join('\n'), { language }).value;
-  if (hasLineNumbers) {
-    return highlightedCode
-      .split('\n')
-      .map((line, index) => `<span><span class="line-number">${index + 1}</span> ${line}</span>`)
-      .join('\n');
-  }
-  return highlightedCode;
+    return (
+        <CodeBlockContext.Provider value={contextValue}>
+            <CodeBlockContent />
+        </CodeBlockContext.Provider>
+    )
 }
