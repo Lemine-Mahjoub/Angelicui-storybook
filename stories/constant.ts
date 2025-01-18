@@ -4,4 +4,4 @@ import hljs from 'highlight.js';
 //===========================================
 
 export const HIGHLIGHTJS_LANGUAGE = hljs.listLanguages();
-export const DEFAULT_LANGUAGE = 'plaintext';
+export const DEFAULT_LANGUAGE = 'python';

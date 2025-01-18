@@ -14,7 +14,7 @@ const config = {
   ],
   framework: {
     name: "@storybook/react-vite",
-    options: {},
+    options: { strictMode: false }
   },
 };
 export default config;

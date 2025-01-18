@@ -1,12 +1,10 @@
-import React from "react";
-import { CodeBlockActions } from "./CodeBlockAction";
-import { CodeBlockLanguage } from "./CodeBlockLanguage";
+import { div } from 'framer-motion/client'
+import React, { ReactNode } from 'react'
 
-export function CodeBlockHeader() {
+export function CodeBlockHeader({ children }: {children: ReactNode}) {
     return (
         <div className="flex justify-between items-center gap-8">
-            <CodeBlockActions />
-            <CodeBlockLanguage />
+            {children}
         </div>
     )
 }

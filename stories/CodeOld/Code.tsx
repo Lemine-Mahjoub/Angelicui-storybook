@@ -2,7 +2,7 @@ import React from 'react';
 import hljs from 'highlight.js';
 import './codehighlight.css';
 import { HIGHLIGHTJS_LANGUAGE, DEFAULT_LANGUAGE } from '../constant';
-import { useCodeBlock } from './CodeBlock';
+import { useCodeBlock } from './CodeBlockOld';
 
 interface CodeBlockProps {
   code: string[];

@@ -1,83 +1,127 @@
 import React, { createContext, useContext, useState } from 'react';
+import { Modal } from '../Modal/Modal';
 import { CodeBlockContent } from './CodeBlockContent';
-interface CodeBlockProps {
-    allowFullScreen?: boolean;
-    allowMinimize?: boolean;
-    allowClose?: boolean;
-    content: string[];
-    language: string;
-    hasLineNumbers?: boolean;
-}
+import { CodeBlockCodeContent } from './CodeBlockCodeContent';
+import { CodeBlockHeader } from './CodeBlockHeader';
+import { CloseButton, CodeBlockHeaderActions, FullscreenButton, MinimizeButton } from './CodeBlockHeaderAction';
+import { CodeBlockLanguage } from './CodeBlockLanguage';
+import { CodeBlockCode } from './CodeBlockCode';
+import { CodeBlockLinesNumber } from './CodeBlockLinesNumber';
 
 interface CodeBlockContextType {
-    isFullscreen: boolean;
-    setIsFullscreen: (value: boolean) => void;
-    isMinimized: boolean;
-    setIsMinimized: (value: boolean) => void;
-    isClosed: boolean;
-    setIsClosed: (value: boolean) => void;
-    content: string[];
-    language: string;
-    hasLineNumbers: boolean;
-    allowFullScreen: boolean;
-    allowMinimize: boolean;
-    allowClose: boolean;
+    isFullscreen: boolean,
+    setIsFullscreen: (isFullscreen: boolean) => void,
+    isMinimise: boolean,
+    setIsMinimise: (isMinimise: boolean) => void,
+    isClose: boolean,
+    setIsClose: (isClose: boolean) => void,
+    code: string[],
+    setCode: (code: string[]) => void,
 }
 
-const CodeBlockContext = createContext<CodeBlockContextType | undefined>(undefined);
+export const CodeBlockContext = createContext<CodeBlockContextType>({
+    isFullscreen: false,
+    setIsFullscreen: () => {},
+    isMinimise: false,
+    setIsMinimise: () => {},
+    isClose: false,
+    setIsClose: () => {},
+    code: [],
+    setCode: () => {},
+});
 
-export function useCodeBlock() {
-    const context = useContext(CodeBlockContext);
-    if (!context) {
-        throw new Error('useCodeBlock must be used within a CodeBlockProvider');
+interface CodeBlockLanguageType {
+    language: string,
+    setLanguage: (language: string) => void,
+}
+
+export const LanguageContext = createContext<CodeBlockLanguageType>({
+    language: "",
+    setLanguage: () => {},
+})
+
+export function useLanguageContext(){
+    const context = useContext(LanguageContext);
+    if (context === undefined) {
+        throw new Error('useLanguageContext must be used within a LanguageProvider');
     }
     return context;
 }
 
-export function CodeBlock({
-    allowFullScreen = false,
-    allowMinimize = false,
-    allowClose = false,
-    content,
-    language,
-    hasLineNumbers = false
-}: CodeBlockProps) {
-
+export function useCodeBlock() {
+    const context = useContext(CodeBlockContext);
+    if (context === undefined) {
+        throw new Error('useCodeBlock must be used within a CodeBlockProvider');
+    }
+    return context;
+}
+export function CodeBlock({ children }: { children: React.ReactNode }) {
     const [isFullscreen, setIsFullscreen] = useState(false);
-    const [isMinimized, setIsMinimized] = useState(false);
-    const [isClosed, setIsClosed] = useState(false);
+    const [isMinimise, setIsMinimise] = useState(false);
+    const [isClose, setIsClose] = useState(false);
+    const [language, setLanguage] = useState("plaintext");
+    const [code, setCode] = useState<string[]>([]);
 
-    const contextValue: CodeBlockContextType = {
+    const LanguageValue = {
+        language,
+        setLanguage
+    }
+
+    const contextValue = {
         isFullscreen,
         setIsFullscreen,
-        isMinimized,
-        setIsMinimized,
-        isClosed,
-        setIsClosed,
-        content,
-        language,
-        hasLineNumbers,
-        allowFullScreen,
-        allowMinimize,
-        allowClose,
-    };
+        isMinimise,
+        setIsMinimise,
+        isClose,
+        setIsClose,
+        code,
+        setCode,
+    }
 
-    if (isClosed) {
+    console.count('CodeBlock.tsx rendered');
+
+    let renderedChildren = children;
+
+    if (isClose){
         return null;
     }
 
     if (isFullscreen) {
-        return (
-            <CodeBlockContext.Provider value={contextValue}>
-                <CodeBlockContent.Fullscreen />
-            </CodeBlockContext.Provider>
-        )
+        renderedChildren = (
+        <Modal isOpen={isFullscreen}>
+            {renderedChildren}
+        </Modal>)
     }
-
 
     return (
         <CodeBlockContext.Provider value={contextValue}>
-            <CodeBlockContent />
+            <LanguageContext.Provider value={LanguageValue} >
+                {renderedChildren}
+            </LanguageContext.Provider>
         </CodeBlockContext.Provider>
-    )
+    );
 }
+
+
+
+// Code Block Header :
+CodeBlock.Header = CodeBlockHeader;
+
+// Code Block Header Buttons :
+CodeBlock.HeaderActions = CodeBlockHeaderActions;
+CodeBlock.BtnMinimize = MinimizeButton;
+CodeBlock.BtnFullscreen = FullscreenButton;
+CodeBlock.BtnClose = CloseButton;
+
+// Code Block Language
+CodeBlock.Language = CodeBlockLanguage;
+
+// Code Block Content
+CodeBlock.Content = CodeBlockContent;
+CodeBlock.CodeContent = CodeBlockCodeContent;
+CodeBlock.LinesNumber = CodeBlockLinesNumber;
+CodeBlock.Code = CodeBlockCode;
+
+
+
+

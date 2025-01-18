@@ -1,5 +1,5 @@
 import React from 'react';
-import { useCodeBlock } from './CodeBlock';
+import { useCodeBlock } from './CodeBlockOld';
 
 export function CodeBlockActions() {
 

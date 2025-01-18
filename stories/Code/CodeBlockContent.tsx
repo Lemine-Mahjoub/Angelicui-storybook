@@ -1,29 +1,17 @@
-import React from 'react';
-import { useCodeBlock } from './CodeBlock';
-import { Code } from './Code';
-import { CodeBlockHeader } from './CodeBlockHeader';
-import { Modal } from '../Modal/Modal';
+import { div } from 'framer-motion/client'
+import React, { ReactNode } from 'react'
+import { useCodeBlock } from './CodeBlock'
 
-export function CodeBlockContent() {
+export function CodeBlockContent({ children }: {children: ReactNode}){
+    const { isMinimise } = useCodeBlock()
+
+    if (isMinimise){
+        return null;
+    }
 
     return (
-        <div className="bg-[#151618] rounded-md px-4 py-4 flex flex-col">
-            <CodeBlockHeader />
-            <Code.CodeBlock />
+        <div className='flex flex-col'>
+            {children}
         </div>
     )
 }
-
-function CodeBlockContentFullscreen() {
-    const { isFullscreen } = useCodeBlock();
-
-    return (
-        <Modal isOpen={isFullscreen}>
-            <div className="overflow">
-                <CodeBlockContent />
-            </div>
-        </Modal>
-    )
-}
-
-CodeBlockContent.Fullscreen = CodeBlockContentFullscreen;
