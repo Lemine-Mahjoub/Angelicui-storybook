@@ -1,11 +1,10 @@
 import React from 'react';
 import hljs from 'highlight.js';
-import { useCodeBlock, useLanguageContext } from "./CodeBlock";
+import { useCodeBlock } from "./CodeBlock";
 import './codehighlight.css';
 
 export function CodeBlockCode({ children }: {children: string[]}) {
-    const { language } = useLanguageContext();
-    const { setCode } = useCodeBlock();
+    const { setCode, language } = useCodeBlock();
 
     const highlightedCode = highlightCode(children, language)
 

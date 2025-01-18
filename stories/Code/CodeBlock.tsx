@@ -17,6 +17,8 @@ interface CodeBlockContextType {
     setIsClose: (isClose: boolean) => void,
     code: string[],
     setCode: (code: string[]) => void,
+    language: string,
+    setLanguage: (language: string) => void,
 }
 
 export const CodeBlockContext = createContext<CodeBlockContextType>({
@@ -28,24 +30,13 @@ export const CodeBlockContext = createContext<CodeBlockContextType>({
     setIsClose: () => {},
     code: [],
     setCode: () => {},
+    language: "plaintext",
+    setLanguage: () => {},
 });
 
 interface CodeBlockLanguageType {
     language: string,
     setLanguage: (language: string) => void,
-}
-
-export const LanguageContext = createContext<CodeBlockLanguageType>({
-    language: "",
-    setLanguage: () => {},
-})
-
-export function useLanguageContext(){
-    const context = useContext(LanguageContext);
-    if (context === undefined) {
-        throw new Error('useLanguageContext must be used within a LanguageProvider');
-    }
-    return context;
 }
 
 export function useCodeBlock() {
@@ -62,11 +53,6 @@ export function CodeBlock({ children }: { children: React.ReactNode }) {
     const [language, setLanguage] = useState("plaintext");
     const [code, setCode] = useState<string[]>([]);
 
-    const LanguageValue = {
-        language,
-        setLanguage
-    }
-
     const contextValue = {
         isFullscreen,
         setIsFullscreen,
@@ -76,6 +62,8 @@ export function CodeBlock({ children }: { children: React.ReactNode }) {
         setIsClose,
         code,
         setCode,
+        language,
+        setLanguage
     }
 
     console.count('CodeBlock.tsx rendered');
@@ -95,9 +83,7 @@ export function CodeBlock({ children }: { children: React.ReactNode }) {
 
     return (
         <CodeBlockContext.Provider value={contextValue}>
-            <LanguageContext.Provider value={LanguageValue} >
-                {renderedChildren}
-            </LanguageContext.Provider>
+            {renderedChildren}
         </CodeBlockContext.Provider>
     );
 }

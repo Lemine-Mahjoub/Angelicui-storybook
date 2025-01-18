@@ -1,9 +1,9 @@
 import React, { useEffect } from "react";
-import { useLanguageContext } from "./CodeBlock";
+import { useCodeBlock } from "./CodeBlock";
 import { HIGHLIGHTJS_LANGUAGE, DEFAULT_LANGUAGE } from "../constant";
 
 export function CodeBlockLanguage({ children }: {children: string}) {
-    const { language, setLanguage } = useLanguageContext();
+    const { language, setLanguage } = useCodeBlock();
 
     useEffect(() => {
         if (children && HIGHLIGHTJS_LANGUAGE.includes(language)) {
