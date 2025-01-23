@@ -20,8 +20,6 @@ interface CodeBlockContextType {
     setLanguage: (value: string) => void;
     code: string[];
     setCode: (value: string[]) => void;
-    tab: number;
-    setTab: (value: number) => void;
 }
 
 const CodeBlockContext = createContext<CodeBlockContextType | undefined>(undefined);
@@ -32,9 +30,8 @@ export const CodeBlock = ({ children }: { children: React.ReactNode }) => {
     const [isClose, setIsClose] = useState(false);
     const [language, setLanguage] = useState("plaintext");
     const [code, setCode] = useState<string[]>([]);
-    const [tab, setTab] = useState<number>(0);
 
-    const value = useMemo(() => ({
+    const value = {
         isFullscreen,
         setIsFullscreen,
         isMinimise,
@@ -45,9 +42,7 @@ export const CodeBlock = ({ children }: { children: React.ReactNode }) => {
         setLanguage,
         code,
         setCode,
-        tab,
-        setTab,
-    }), [isFullscreen, isMinimise, isClose, language, code, tab]);
+    }
 
     return (
         <CodeBlockContext.Provider value={value}>
@@ -74,7 +69,7 @@ function CodeBlockContainer({ children }: { children: React.ReactNode }) {
 
     if (isFullscreen) {
         return <Modal isOpen={isFullscreen}>
-            <div className="p-10 rounded-md bg-[#1e1e1e]">{children}</div>
+            <div className="p-10 rounded-md bg-[#1e1e1e] min-w-[600px]">{children}</div>
         </Modal>;
     }
 

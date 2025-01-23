@@ -23,7 +23,7 @@ export function CopyButton({ children }: { children?: React.ReactNode }) {
     return (
         <div className="flex items-center gap-2 w-full justify-end">
             <button
-                className="text-[14px] text-white font-mono bg-slate-500 p-1 rounded-md"
+                className="text-[14px] text-white font-mono bg-slate-500 p-2 rounded-md"
                 onClick={handleCopy}
             >
                 Copy
