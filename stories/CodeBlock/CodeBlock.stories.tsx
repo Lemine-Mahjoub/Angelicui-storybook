@@ -1,9 +1,9 @@
 import type { Meta, StoryObj } from '@storybook/react';
 import React from 'react';
 import { CodeBlock } from './CodeBlock';
-import { TabsProvider } from '../CodeBlockTabs/TabsProvider';
-import { Tabs } from '../CodeBlockTabs/Tabs';
-import { TabTitle } from '../CodeBlockTabs/TabsTitle';
+import { CodeBlockWithTabs } from './CodeBlockTabs';
+import { CodeBlockMD } from './CodeBlockMD';
+import { CodeBlockEdu } from './CodeBlockEdu';
 
 const meta = {
   component: CodeBlock,
@@ -71,8 +71,8 @@ export const Default: Story = {
 
 
 const tabsTitle = [
-    "Code",
-    "Copy"
+    "Code 1",
+    "Code 2"
 ]
 
 const tabsCode = [
@@ -85,35 +85,39 @@ const tabsLanguage = [
     "JavaScript"
 ]
 
-function TabsChildren() {
-    return (
-        <TabsProvider>
-            <Tabs />
-            <CodeBlock.Header>
-                <CodeBlock.HeaderAction>
-                    <CodeBlock.MinimizeBtn/>
-                    <CodeBlock.FullscreenBtn/>
-                    <CodeBlock.CloseBtn/>
-                </CodeBlock.HeaderAction>
-                <CodeBlock.Language>
-                    {tabsLanguage}
-                </CodeBlock.Language>
-            </CodeBlock.Header>
-            <CodeBlock.Content>
-                <CodeBlock.CodeContent>
-                    <CodeBlock.LineNumbers/>
-                    <CodeBlock.HighlightCode>
-                        {tabsCode}
-                    </CodeBlock.HighlightCode>
-                </CodeBlock.CodeContent>
-                <CodeBlock.CopyBtn/>
-            </CodeBlock.Content>
-        </TabsProvider>
-    )
-}
-
 export const TabsChild: Story = {
     args: {
-        children: <TabsChildren />,
+        children: <CodeBlockWithTabs tabs={tabsTitle} code={tabsCode} language={tabsLanguage} />,
+    },
+};
+
+const mdCode = [
+    "```\nfunction Code() {",
+    "    return (",
+    "        <div>Code</div>",
+    "    )",
+    "}",
+    "```"
+]
+
+export const MD: Story = {
+    args: {
+        children: <CodeBlockMD code={mdCode} language={defaultLanguage} />,
+    },
+};
+
+const eduCode = [
+    "```typescript",
+    "function Code() {",
+    "    return (",
+    "        <div>Code</div>",
+    "    )",
+    "}",
+    "```"
+]
+
+export const Edu: Story = {
+    args: {
+        children: <CodeBlockEdu code={eduCode} />,
     },
 };

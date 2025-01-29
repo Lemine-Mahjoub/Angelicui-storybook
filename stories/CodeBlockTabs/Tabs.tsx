@@ -1,14 +1,10 @@
-import { useTabs } from "./TabsProvider";
 import React from "react";
 
-export function Tabs() {
-    const { activeTab, setActiveTab, tabs } = useTabs();
+export function Tabs({ children }: { children: React.ReactNode }) {
 
     return (
-        <div className="flex items-center gap-2">
-            {tabs.map((tab, index) => (
-                <button key={index} onClick={() => setActiveTab(index)}>{tab}</button>
-            ))}
+        <div className="flex items-center gap-2 w-fit  text-white p-2 rounded-lg">
+            {children}
         </div>
     )
 }

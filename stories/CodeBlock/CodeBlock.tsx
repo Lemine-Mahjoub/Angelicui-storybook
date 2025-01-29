@@ -83,7 +83,6 @@ function CodeBlockContainer({ children }: { children: React.ReactNode }) {
 
 
 // CodeBlocks Tabs
-// TODO: ADD Tabs Component
 
 // CodeBlocks Header
 CodeBlock.Header = Header;
