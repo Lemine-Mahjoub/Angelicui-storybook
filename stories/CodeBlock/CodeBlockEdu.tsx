@@ -24,13 +24,10 @@ export function CodeBlockEdu({code}: CodeBlockMDProps) {
             </CodeBlock.Header>
             <CodeBlock.Content>
                 <CodeBlock.CodeContent>
-                    {/*  A Refaire : Reutiliser ce qui existe déja */}
-                    <pre className="code-block w-full overflow-x-auto text-[14px]">
-                        <code
-                            className={`language-${language}`}
-                            dangerouslySetInnerHTML={{ __html: MarkdownParser(code, setLanguage) }}
-                        />
-                    </pre>
+                    <CodeBlock.LineNumbers/>
+                    <CodeBlock.HighlightCode>
+                        {MarkdownParser(code, setLanguage)}
+                    </CodeBlock.HighlightCode>
                 </CodeBlock.CodeContent>
             </CodeBlock.Content>
         </CodeBlock>
@@ -38,27 +35,14 @@ export function CodeBlockEdu({code}: CodeBlockMDProps) {
 }
 
 function MarkdownParser(code: string[], setLanguage: (language: string) => void) {
-    const renderer = createCustomRenderer(setLanguage);
-    const parsedCode = marked(code.join("\n"), {
-        breaks: true,
-        gfm: true,
-        renderer: renderer,
-        async: false
-    });
+    const language = code[0].split("```")[1];
+    setLanguage(language);
+    const codeLines = code.slice(1);
 
-    return parsedCode
-}
-
-export function createCustomRenderer(setLanguage: (language: string) => void) {
-    const renderer = new marked.Renderer();
-    renderer.code = ({ text, lang = '' }: { text: string; lang?: string }) => {
-        const language = lang || 'plaintext';
-
-        setLanguage(language);
-
-        const highlightedCode = hljs.highlight(text, { language }).value;
-
-        return `<pre class="hljs language-${language}"><code>${highlightedCode}</code></pre>`;
-    };
-    return renderer;
+    return codeLines.map((line) => {
+        if (line.startsWith("```")) {
+            return line.replace("```", "");
+        }
+        return line;
+    })
 }
